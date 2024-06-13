@@ -24,7 +24,7 @@
       </template>
       <template v-else>
         <router-link :to="{ name: 'message', params: { tagname: this.$route.params.tagname } }" class="btn action--button btn--white" tag="button" :disabled="isSelf">
-          Contact client
+          Contact Lecturer
         </router-link>
       </template>
     </div>

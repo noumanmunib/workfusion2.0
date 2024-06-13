@@ -17,22 +17,21 @@
           <h1 class="project-details--h1 text-outline--thin">
             {{ project.title }}
           </h1>
+          <p class="details__ongoing--p">
+            On Going Project Since {{ timeline.long.start }}
+          </p>
         </div>
-        <div class="project-details--action-button">
-          <router-link class="btn btn--blue btn--large" :to="{ name: applyRoute, params: { title: project.title , type: project.applicant_type } }" tag="button" :disabled="!isEligibleToApply">
-            Apply Project
-          </router-link>
-          <button v-debounce:300ms="toggleWishlist" :debounce-events="'click'" class="btn btn--white btn--large" :disabled="user && user.role === 'Lecturer'">
-            <div v-show="project.is_wished && project.is_wished.status" class="flex">
-              <span class="iconify" data-icon="ic:round-remove-circle-outline" width="24" height="24" />
-            </div>
-            <div v-show="!project.is_wished || !project.is_wished.status" class="flex">
-              <span class="iconify" data-icon="ic:round-add-circle-outline" width="24" height="24" />
-            </div>
-            <span>Wishlist</span>
-          </button>
+
+        <div class="flex-row">
+          <p class="details___ongoing--h2">
+            Overall Score:
+          </p>
+          <p class="project-details--h1 ml-2">
+            {{ overallScore }}
+          </p>
         </div>
       </div>
+
       <div v-else class="mb-2_5">
         <h1 class="project-details--h1">
           {{ project.title }}
@@ -40,19 +39,18 @@
       </div>
 
       <div v-if="!$matchMedia.xl">
-        <div v-if="project.status === 'Hiring'" class="project-details--action-button">
-          <router-link class="btn btn--blue btn--large" :to="{ name: applyRoute, params: { title: project.title , type: project.applicant_type } }" tag="button" :disabled="!isEligibleToApply" @click="nyoba">
-            Apply Project
-          </router-link>
-          <button v-debounce:400ms="toggleWishlist" class="btn btn--white btn--large" :disabled="user && user.role === 'Lecturer'" :debounce-events="'click'">
-            <div v-show="project.is_wished && project.is_wished.status" class="flex">
-              <span class="iconify" data-icon="ic:round-remove-circle-outline" width="24" height="24" />
-            </div>
-            <div v-show="!project.is_wished || !project.is_wished.status" class="flex">
-              <span class="iconify" data-icon="ic:round-add-circle-outline" width="24" height="24" />
-            </div>
-            <span>Wishlist</span>
-          </button>
+        <div class="project-details__finished-score-container">
+          <div class="project-details__score-container">
+            <p class="project-details__score-text">
+              Score
+            </p>
+            <p class="project-details__score-number">
+              {{ Number(project.project_review.overall_score).toFixed(1) }}
+            </p>
+          </div>
+          <h2 class="project-details__h2--finished">
+            Project Finished
+          </h2>
         </div>
       </div>
       <h2 v-if="!$matchMedia.xl" id="project-details" v-scroll-to="'#project-details'" class="project-details--h2">
@@ -88,49 +86,74 @@
         </div>
 
         <div>
-          <div class="project-description">
-            <h3>Description</h3>
-            <p>{{ project.description || "-" }}</p>
-          </div>
+          <!-- <div v-if="!$matchMedia.xl" class="mt-3 mb-3">
+            <p class="project-details__score-text text-center project-details__score-text--overall">
+              Overall Score
+            </p>
+            <p class="project-details__score-number text-center">
+              {{ Number(project.project_review.overall_score).toFixed(1) }}
+            </p>
+          </div> -->
+
           <div>
-            <div class="project-requirements">
-              <h3>Requirements</h3>
-              <ul v-if="project && project.requirements && project.requirements.length > 0" class="requirements--container">
-                <li v-for="req in project.requirements" :key="req.id">
-                  {{ req.requirement }}
-                </li>
-              </ul>
-              <p v-else>
-                -
+            <div class="project-description">
+              <h3>Description</h3>
+              <p>{{ project.description }}</p>
+            </div>
+
+            <div class="project-description">
+              <h3>Overall Review</h3>
+              <p>{{ project.project_review.overall_review }}</p>
+              <p v-if="!$matchMedia.xl" class="text-bold text-italic">
+                - {{ project.user.full_name }}
               </p>
             </div>
-            <div class="project-skills">
-              <h3>Skills</h3>
-              <div v-if="project && project.skills && project.skills.length > 0" class="skills--container">
-                <BubbleSkill v-for="skill in project.skills" :key="skill.id" :color="bgBubble" :name="skill.name" />
+
+            <div class="mb-3">
+              <h3 v-if="!$matchMedia.xl">
+                Participants
+              </h3>
+              <div class=" participant-reviews__container">
+                <ParticipantReview v-for="member in project.project_team.members" :key="`ParticipantReview-${member.id}`" :data="member" :lecturer="project.user.full_name" />
               </div>
-              <p v-else>
-                -
-              </p>
             </div>
-          </div>
-        </div>
-        <div v-if="!$matchMedia.xl" class="project-summary">
-          <h2 class="summary--h2">
-            Summary Project
-          </h2>
-          <div class="summary--items">
-            <div v-for="(summary, index) in summaries" :key="`SummaryItem-${index}`" class="summary--item">
-              <template v-if="summary.type === 'icon'">
-                <div class="summary-icon">
-                  <span class="iconify" :data-icon="summary.icon" width="15" height="15" />
-                </div> {{ summary.text }}
-              </template>
-              <template v-else>
-                <div class="summary-icon">
-                  <span class="summary--text-icon">{{ summary.icon }}</span>
-                </div> {{ summary.text }}
-              </template>
+
+            <div v-if="!$matchMedia.xl" class="project-description mb-3">
+              <h3>
+                Timeline
+              </h3>
+              <div class="flex-row">
+                <div class="h-timeline__time-container">
+                  <div class="h-timeline__top">
+                    Start
+                  </div>
+                  <img src="/images/timeline-dot.svg" class="h-timeline_middle">
+                  <div class="h-timeline__bottom">
+                    {{ timeline.short.start }}
+                  </div>
+                </div>
+                <div class="h-timeline__separator" />
+                <div class="h-timeline__time-container">
+                  <div class="h-timeline__top">
+                    FINISH
+                  </div>
+                  <img src="/images/timeline-dot.svg" class="h-timeline_middle">
+                  <div class="h-timeline__bottom">
+                    {{ timeline.short.finish }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="!$matchMedia.xl" class="project-description">
+              <h3>Result</h3>
+              <div class="social-media__edit-input--container">
+                <span class="iconify social-media__edit--icon" data-icon="whh:website" />
+                <a v-if="projectReview.linkFiltered" :href="projectReview.link" class="social-media__a" target="_blank">
+                  <input :value="projectReview.linkFiltered" type="text" class="social-media__input" disabled>
+                </a>
+                <input v-else type="text" class="social-media__input" value="-" disabled>
+              </div>
             </div>
           </div>
         </div>
@@ -150,8 +173,8 @@
             <p>{{ project.user.expertise }}</p>
           </div>
         </div>
-        <router-link :to="{ name: 'message', params: { tagname: project.user.tagname } }" class="btn btn--blue btn--large" tag="button" :disabled="isSelf">
-          Contact client
+        <router-link v-if="$matchMedia.xl" :to="{ name: 'message', params: { tagname: project.user.tagname } }" class="btn btn--blue btn--large" tag="button" :disabled="isSelf">
+          Contact Lecturer
         </router-link>
         <div v-if="$matchMedia.xl" class="project-summary">
           <div class="details__share--container">
@@ -176,23 +199,40 @@
               </ShareNetwork>
             </div>
           </div>
+          <div class="project-description">
+            <h3>Result</h3>
+            <div class="social-media__edit-input--container">
+              <span class="iconify social-media__edit--icon" data-icon="whh:website" />
+              <a v-if="projectReview.linkFiltered" :href="projectReview.link" class="social-media__a" target="_blank">
+                <input :value="projectReview.linkFiltered" type="text" class="social-media__input" disabled>
+              </a>
+              <input v-else type="text" class="social-media__input" value="-" disabled>
+            </div>
+          </div>
 
-          <div>
-            <h2 class="summary--h2">
-              Summary Project
-            </h2>
-            <div class="summary--items">
-              <div v-for="(summary, index) in summaries" :key="`SummaryItem-${index}`" class="summary--item">
-                <template v-if="summary.type === 'icon'">
-                  <div class="summary-icon">
-                    <span class="iconify" :data-icon="summary.icon" width="24" height="24" />
-                  </div> {{ summary.text }}
-                </template>
-                <template v-else>
-                  <div class="summary-icon">
-                    <span class="summary--text-icon">{{ summary.icon }}</span>
-                  </div> {{ summary.text }}
-                </template>
+          <div class="project-description mb-3">
+            <h3>
+              Timeline
+            </h3>
+            <div class="flex-row">
+              <div class="h-timeline__time-container">
+                <div class="h-timeline__top">
+                  Start
+                </div>
+                <img src="/images/timeline-dot.svg" class="h-timeline_middle">
+                <div class="h-timeline__bottom">
+                  {{ timeline.long.start }}
+                </div>
+              </div>
+              <div class="h-timeline__separator" />
+              <div class="h-timeline__time-container">
+                <div class="h-timeline__top">
+                  FINISH
+                </div>
+                <img src="/images/timeline-dot.svg" class="h-timeline_middle">
+                <div class="h-timeline__bottom">
+                  {{ timeline.long.finish }}
+                </div>
               </div>
             </div>
           </div>
@@ -229,13 +269,14 @@ import * as timeago from 'timeago.js'
 import { mapGetters } from 'vuex'
 import axios from 'axios'
 import ProjectCard from '~/components/ProjectCard'
+import ParticipantReview from '~/components/ProjectDetails/ParticipantReview'
 // import snarkdown from 'snarkdown'
 
 export default {
-  name: 'ProjectDetailsHiring',
+  name: 'FinishedProjectDetailsPage',
 
   components: {
-    ProjectCard
+    ProjectCard, ParticipantReview
   },
 
   data: () => ({
@@ -282,10 +323,22 @@ export default {
       return false
     },
 
-    startSince () {
-      const date = new Date(this.project.start_time)
-      let options = { year: 'numeric', month: 'long', 'day': 'numeric' }
-      return date.toLocaleString('en-US', options)
+    timeline () {
+      const startDate = new Date(this.project.start_time)
+      const finishDate = new Date(this.project.finish_time)
+      const shortOptions = { year: 'numeric', month: 'short', 'day': 'numeric' }
+      const longOptions = { year: 'numeric', month: 'long', 'day': 'numeric' }
+
+      return {
+        short: {
+          start: startDate.toLocaleString('en-US', shortOptions),
+          finish: finishDate.toLocaleString('en-US', shortOptions)
+        },
+        long: {
+          start: startDate.toLocaleString('en-US', longOptions),
+          finish: finishDate.toLocaleString('en-US', longOptions)
+        }
+      }
     },
 
     summaries () {
@@ -306,14 +359,6 @@ export default {
       else if (this.project.level_applicant === 'Medium') return 2500
       else if (this.project.level_applicant === 'Hard') return 4000
       else if (this.project.level_applicant === 'Expert') return 5000
-      else return 0
-    },
-
-    minimumPoints () {
-      if (this.project.level_applicant === 'Easy') return 0
-      else if (this.project.level_applicant === 'Medium') return 1500
-      else if (this.project.level_applicant === 'Hard') return 4500
-      else if (this.project.level_applicant === 'Expert') return 9000
       else return 0
     },
 
@@ -354,22 +399,23 @@ export default {
       return this.project.individual_applicants_count
     },
 
+    wishlistsText () {
+      // if (this.project.is_wished) {
+      //   if (this.project.is_wished.status) return 'Wishlist'
+      //   else return 'Wishlist'
+      // }
+
+      return 'Wishlist'
+    },
+
     projectReview () {
       return { 'icon': 'whh:website',
         'link': this.project.project_review.project_result ? this.project.project_review.project_result : '',
         'linkFiltered': this.project.project_review.project_result ? this.filterLink(this.project.project_review.project_result) : '' }
     },
 
-    isEligibleToApply () {
-      return (this.project.is_open_hiring && !this.user) | (this.user && this.user.role !== 'Lecturer' && this.theStudentHighestPoints >= this.minimumPoints && this.project.is_open_hiring)
-    },
-
-    theStudentHighestPoints () {
-      if (this.user && this.user.leaderboards) {
-        return Math.max(this.user.leaderboards.map(e => e.points))
-      }
-
-      return 0
+    overallScore () {
+      return Number(this.project.project_review.overall_score).toFixed(1) || 'Not Specified'
     }
   },
 
@@ -473,6 +519,10 @@ export default {
       const filter = link.split('//')
       return filter[filter.length - 1]
     }
+  },
+
+  metaInfo () {
+    return { title: this.project ? this.project.title : '' }
   }
 }
 </script>

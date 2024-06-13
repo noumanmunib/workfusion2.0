@@ -234,7 +234,7 @@
           tag="button"
           :disabled="isSelf"
         >
-          Contact client
+          Contact Lecturer
         </router-link>
         <div v-if="$matchMedia.xl" class="project-summary">
           <div class="details__share--container">

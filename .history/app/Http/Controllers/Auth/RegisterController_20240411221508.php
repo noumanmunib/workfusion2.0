@@ -4,11 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\User;
-use Illuminate\Auth\Events\Registered;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\VerificationEmail;
 
 class RegisterController extends Controller
 {
@@ -33,14 +32,11 @@ class RegisterController extends Controller
      */
     protected function registered(Request $request, User $user)
     {
-        event(new Registered($user));
-
-        // Send verification email
         if ($user instanceof MustVerifyEmail) {
-            Mail::to($user->email)->send(new VerificationEmail($user));
+            return response()->json(['status' => trans('verification.sent')]);
         }
 
-        return response()->json(['message' => trans('verification.sent')]);
+        return response()->json($user);
     }
 
     /**
@@ -59,7 +55,7 @@ class RegisterController extends Controller
                 'email' => 'required|email|max:255|unique:users|regex:/^[a-zA-Z0-9.]+@(?!.*(student)).*.ac.id.*$/',
                 'password' => 'required|min:8',
             ], [
-                'email.regex' => 'You must use an academic email address that is not from a student domain.'
+                'email.regex' => 'You were using student academic email address or not using an academic email at all.'
             ]);
         } else {
             return Validator::make($data, [

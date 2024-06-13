@@ -21,7 +21,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('guest');a
     }
 
     /**
@@ -59,7 +59,7 @@ class RegisterController extends Controller
                 'email' => 'required|email|max:255|unique:users|regex:/^[a-zA-Z0-9.]+@(?!.*(student)).*.ac.id.*$/',
                 'password' => 'required|min:8',
             ], [
-                'email.regex' => 'You must use an academic email address that is not from a student domain.'
+                'email.regex' => 'You must use an academic email address that is not from student domain.'
             ]);
         } else {
             return Validator::make($data, [

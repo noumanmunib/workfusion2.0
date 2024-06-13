@@ -17,13 +17,14 @@
           <h1 class="project-details--h1 text-outline--thin">
             {{ project.title }}
           </h1>
-          <p class="details__ongoing--p text-bold text-italic">
+          <p class="details__ongoing--p">
             On Going Project Since {{ startSince }}
           </p>
-          <p class="details__ongoing--p">
-            Please contact your lecturer for your further information about the
-            project.
-          </p>
+        </div>
+        <div>
+          <h2 class="details___ongoing--h2">
+            Overall Score: -
+          </h2>
         </div>
       </div>
 
@@ -31,6 +32,9 @@
         <h1 class="project-details--h1">
           {{ project.title }}
         </h1>
+        <p class="details__ongoing--p">
+          On Going Project Since {{ startSince }}
+        </p>
       </div>
 
       <div v-if="!$matchMedia.xl">
@@ -39,17 +43,9 @@
             Project Participants
           </h3>
           <div class="project-dashboard__list-team">
-            <div
-              v-for="(e, index) in members"
-              :key="`ProjectParticipant-${index}`"
-              class="project-dashboard__list-team--item"
-            >
+            <div v-for="(e, index) in members" :key="`ProjectParticipant-${index}`" class="project-dashboard__list-team--item">
               <router-link :to="{ path: '/@/' + e.member.tagname }">
-                <img
-                  :src="e.member.avatar"
-                  alt=""
-                  class="project-dashboard__list-team--img"
-                >
+                <img :src="e.member.avatar" alt="" class="project-dashboard__list-team--img">
               </router-link>
 
               <div class="">
@@ -62,27 +58,16 @@
               </div>
             </div>
           </div>
-          <!-- <p class="details__ongoing--p text-bold text-italic">
-            On Going Project Since {{ startSince }}
-          </p> -->
-          <p class="details__ongoing--p">
-            Please contact your lecturer for your further information about the
-            project.
-          </p>
         </div>
       </div>
-      <h2
-        v-if="!$matchMedia.xl"
-        id="project-details"
-        v-scroll-to="'#project-details'"
-        class="project-details--h2"
-      >
+      <h2 v-if="!$matchMedia.xl" id="project-details" v-scroll-to="'#project-details'" class="project-details--h2">
         <a href="#project-details" class="button__project--more">
           <span class="iconify" data-icon="zmdi:more" />
           <span>Project Details</span>
         </a>
       </h2>
     </div>
+
     <hr v-if="$matchMedia.xl" class="form--hr">
 
     <div class="desktop-details__body">
@@ -90,14 +75,8 @@
         <div v-if="!$matchMedia.xl" class="project-details__lecturer-info">
           <div class="lecturer-info--left">
             <div class="lecturer-info--image-container mr-1">
-              <router-link
-                :to="{ path: '/@/' + project.user.tagname }"
-                class="lencturer-text-link"
-              >
-                <img
-                  :src="project.user.avatar"
-                  :alt="`${project.user.full_name} Photo Profile`"
-                >
+              <router-link :to="{ path: '/@/' + project.user.tagname }" class="lencturer-text-link">
+                <img :src="project.user.avatar" :alt="`${project.user.full_name} Photo Profile`">
               </router-link>
             </div>
 
@@ -109,46 +88,11 @@
             </div>
           </div>
           <div class="lecturer-info--right">
-            <span
-              class="iconify"
-              data-icon="dashicons:share"
-              width="30"
-              height="30"
-            />
+            <span class="iconify" data-icon="dashicons:share" width="30" height="30" />
           </div>
         </div>
 
         <div>
-          <div v-if="$matchMedia.xl" class="mb-3">
-            <h3 class="project-dashboard__h3 text-left">
-              Project Participants
-            </h3>
-            <div class="project-dashboard__list-team flex-start">
-              <div
-                v-for="(e, index) in members"
-                :key="`ProjectParticipant-${index}`"
-                class="project-dashboard__list-team--item"
-              >
-                <router-link :to="{ path: '/@/' + e.member.tagname }">
-                  <img
-                    :src="e.member.avatar"
-                    alt=""
-                    class="project-dashboard__list-team--img"
-                  >
-                </router-link>
-
-                <div class="">
-                  <p class="project-dashboard__list-team--name">
-                    {{ e.member.full_name }}
-                  </p>
-                  <p class="project-dashboard__list-team--expertise">
-                    {{ e.expertise }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div class="project-description">
             <h3>Description</h3>
             <p>{{ project.description }}</p>
@@ -166,12 +110,7 @@
             <div class="project-skills">
               <h3>Skills</h3>
               <div class="skills--container">
-                <BubbleSkill
-                  v-for="skill in project.skills"
-                  :key="skill.id"
-                  :color="bgBubble"
-                  :name="skill.name"
-                />
+                <BubbleSkill v-for="skill in project.skills" :key="skill.id" :color="bgBubble" :name="skill.name" />
               </div>
             </div>
           </div>
@@ -181,27 +120,16 @@
             Summary Project
           </h2>
           <div class="summary--items">
-            <div
-              v-for="(summary, index) in summaries"
-              :key="`SummaryItem-${index}`"
-              class="summary--item"
-            >
+            <div v-for="(summary, index) in summaries" :key="`SummaryItem-${index}`" class="summary--item">
               <template v-if="summary.type === 'icon'">
                 <div class="summary-icon">
-                  <span
-                    class="iconify"
-                    :data-icon="summary.icon"
-                    width="15"
-                    height="15"
-                  />
-                </div>
-                {{ summary.text }}
+                  <span class="iconify" :data-icon="summary.icon" width="15" height="15" />
+                </div> {{ summary.text }}
               </template>
               <template v-else>
                 <div class="summary-icon">
                   <span class="summary--text-icon">{{ summary.icon }}</span>
-                </div>
-                {{ summary.text }}
+                </div> {{ summary.text }}
               </template>
             </div>
           </div>
@@ -210,14 +138,8 @@
       <div class="desktop__body--right">
         <div v-if="$matchMedia.xl" class="lecturer-info--left">
           <div class="lecturer-info--image-container mr-1">
-            <router-link
-              :to="{ path: '/@/' + project.user.tagname }"
-              class="lencturer-text-link"
-            >
-              <img
-                :src="project.user.avatar"
-                :alt="`${project.user.full_name} Photo Profile`"
-              >
+            <router-link :to="{ path: '/@/' + project.user.tagname }" class="lencturer-text-link">
+              <img :src="project.user.avatar" :alt="`${project.user.full_name} Photo Profile`">
             </router-link>
           </div>
 
@@ -228,13 +150,8 @@
             <p>{{ project.user.expertise }}</p>
           </div>
         </div>
-        <router-link
-          :to="{ name: 'message', params: { tagname: project.user.tagname } }"
-          class="btn btn--blue btn--large"
-          tag="button"
-          :disabled="isSelf"
-        >
-          Contact client
+        <router-link :to="{ name: 'message', params: { tagname: project.user.tagname } }" class="btn btn--blue btn--large" tag="button" :disabled="isSelf">
+          Contact Lecturer
         </router-link>
         <div v-if="$matchMedia.xl" class="project-summary">
           <div class="details__share--container">
@@ -243,25 +160,18 @@
             </h2>
             <div class="flex-row share__button--container">
               <div class="details__share--button" @click="copyToClipboard">
-                <span
-                  class="iconify details__share--icon"
-                  data-icon="ic:round-link"
-                />
+                <span class="iconify details__share--icon" data-icon="ic:round-link" />
                 <span>{{ copyText }}</span>
               </div>
               <ShareNetwork
-                v-for="network in networks"
-                :key="network.network"
+                v-for="network in networks" :key="network.network"
                 :class="`details__share--button`"
                 :network="network.network"
                 :url="sharing.url"
                 :title="sharing.title"
                 :description="sharing.description"
               >
-                <span
-                  class="iconify details__share--icon"
-                  :data-icon="network.icon"
-                />
+                <span class="iconify details__share--icon" :data-icon="network.icon" />
                 <span>{{ network.name }}</span>
               </ShareNetwork>
             </div>
@@ -272,27 +182,16 @@
               Summary Project
             </h2>
             <div class="summary--items">
-              <div
-                v-for="(summary, index) in summaries"
-                :key="`SummaryItem-${index}`"
-                class="summary--item"
-              >
+              <div v-for="(summary, index) in summaries" :key="`SummaryItem-${index}`" class="summary--item">
                 <template v-if="summary.type === 'icon'">
                   <div class="summary-icon">
-                    <span
-                      class="iconify"
-                      :data-icon="summary.icon"
-                      width="24"
-                      height="24"
-                    />
-                  </div>
-                  {{ summary.text }}
+                    <span class="iconify" :data-icon="summary.icon" width="24" height="24" />
+                  </div> {{ summary.text }}
                 </template>
                 <template v-else>
                   <div class="summary-icon">
                     <span class="summary--text-icon">{{ summary.icon }}</span>
-                  </div>
-                  {{ summary.text }}
+                  </div> {{ summary.text }}
                 </template>
               </div>
             </div>
@@ -300,23 +199,73 @@
         </div>
       </div>
     </div>
+
+    <div v-if="$matchMedia.xl">
+      <div>
+        <h3 class="project-dashboard__h3 mt-3">
+          Project Participants
+        </h3>
+        <div class="project-dashboard__list-team">
+          <div v-for="(e, index) in members" :key="`ProjectParticipant-${index}`" class="project-dashboard__list-team--item">
+            <router-link :to="{ path: '/@/' + e.member.tagname }">
+              <img :src="e.member.avatar" alt="" class="project-dashboard__list-team--img">
+            </router-link>
+
+            <div class="">
+              <p class="project-dashboard__list-team--name">
+                {{ e.member.full_name }}
+              </p>
+              <p class="project-dashboard__list-team--expertise">
+                {{ e.expertise }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="desktop__other-projects">
+        <h2 class="other-projects__h2">
+          Other Projects You Might Like
+        </h2>
+        <div class="project--container">
+          <content-placeholders
+            v-for="i in 3"
+            v-show="!projects"
+            :key="`placeholder-${i}`"
+            class="content-placeholders-container"
+            :rounded="true"
+          >
+            <content-placeholders-img />
+            <content-placeholders-heading />
+          </content-placeholders>
+          <ProjectCard v-for="(project, index) in projects" :key="`ProjectCard-${index}`" :data="project" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import * as timeago from 'timeago.js'
 
+import { mapGetters } from 'vuex'
+import axios from 'axios'
+import ProjectCard from '~/components/ProjectCard'
+// import snarkdown from 'snarkdown'
+
 export default {
-  name: 'ProjectDashboard',
-  middleware: ['auth'],
+  name: 'ProjectDetailsOngoingPage',
+
+  components: { ProjectCard },
 
   metaInfo () {
-    return { title: 'Project Dashboard' }
+    return { title: this.project ? this.project.title : '' }
   },
 
   data: () => ({
     projects: null,
+    debounceFetchSimilar: '',
+    beenFetchSimilar: false,
     bgBubble: 'blue',
     copyText: 'Copy',
     image: '/images/img-placeholder.png',
@@ -328,12 +277,14 @@ export default {
       { network: 'whatsapp', name: 'Whatsapp', icon: 'fa-brands:whatsapp' }
       // { network: 'pinterest', name: 'Pinterest', icon: 'fa-brands:pinterest' },
     ]
+
   }),
 
   computed: {
     ...mapGetters({
+      user: 'auth/user',
       project: 'visit/project',
-      user: 'auth/user'
+      snackbar: 'notification/snackbar'
     }),
 
     members () {
@@ -349,9 +300,15 @@ export default {
       }
     },
 
+    isSelf () {
+      if (this.user) return this.user.tagname === this.project.user.tagname
+
+      return false
+    },
+
     startSince () {
       const date = new Date(this.project.start_time)
-      let options = { year: 'numeric', month: 'long', day: 'numeric' }
+      let options = { year: 'numeric', month: 'long', 'day': 'numeric' }
       return date.toLocaleString('en-US', options)
     },
 
@@ -384,15 +341,19 @@ export default {
       else return 0
     },
 
+    applyRoute () {
+      if (this.project.applicant_type === 'Team') return 'project.apply.team'
+      return 'project.apply.individual'
+    },
+
     expertiseIn () {
       let expertises = [
         { name: 'UI/UX Designer', isRequired: this.project.ui_ux_designer },
         { name: 'Frontend Engineer', isRequired: this.project.front_end_engineer },
         { name: 'Backend Engineer', isRequired: this.project.back_end_engineer },
         { name: 'Data Expert', isRequired: this.project.data_expert }
-      ]
-        .filter((expertise) => expertise.isRequired === true)
-        .map((expertise) => expertise.name)
+      ].filter(expertise => expertise.isRequired === true)
+        .map(expertise => expertise.name)
         .join(', ')
 
       return expertises
@@ -400,16 +361,9 @@ export default {
 
     rewards () {
       if (this.project.salary) {
-        const paymentType =
-          this.project.payment_type === 'person'
-            ? 'for each person'
-            : 'for whole project'
+        const paymentType = this.project.payment_type === 'person' ? 'for each person' : 'for whole project'
 
-        return `${new Intl.NumberFormat('id-ID').format(
-          this.project.salary_amount
-        )},- ${this.project.currency} ${paymentType} ${
-          this.project.certificate ? `+ Certificate` : ''
-        }`
+        return `${new Intl.NumberFormat('id-ID').format(this.project.salary_amount)},- ${this.project.currency} ${paymentType} ${this.project.certificate ? `+ Certificate` : ''}`
       }
 
       return 'Certificate'
@@ -425,37 +379,91 @@ export default {
     },
 
     projectReview () {
-      return {
-        icon: 'whh:website',
-        link: this.project.project_review.project_result
-          ? this.project.project_review.project_result
-          : '',
-        linkFiltered: this.project.project_review.project_result
-          ? this.filterLink(this.project.project_review.project_result)
-          : ''
+      return { 'icon': 'whh:website',
+        'link': this.project.project_review.project_result ? this.project.project_review.project_result : '',
+        'linkFiltered': this.project.project_review.project_result ? this.filterLink(this.project.project_review.project_result) : '' }
+    }
+  },
+
+  watch: {
+    $route (to, from) {
+      if (to.name === from.name) {
+        this.getDetails()
+        this.activateOnScroll()
+        this.copyText = 'Copy'
       }
-    },
-
-    isSelf () {
-      if (this.user) return this.user.tagname === this.project.user.tagname
-
-      return false
     }
   },
 
   mounted () {
-    this.getDetails()
+    this.activateOnScroll()
+  },
+
+  beforeDestroy () {
+    this.beenFetchSimilar = true
+    window.onscroll = null
   },
 
   methods: {
+    async similarProjects () {
+      await axios.get(`/api/project/${this.$route.params.id}/similar`)
+        .then(({ data }) => {
+          this.projects = data
+        })
+
+      this.beenFetchSimilar = true
+      window.onscroll = null
+    },
+
+    getHumanDate: function (date) {
+      return timeago.format(date)
+    },
+
     async getDetails () {
       await this.$store.dispatch('visit/fetchVisitedProject', {
         id: this.$route.params.id
       })
     },
 
-    getHumanDate: function (date) {
-      return timeago.format(date)
+    async toggleWishlist () {
+      const isWished = this.project.is_wished && this.project.is_wished.status
+
+      await axios.post(`/api/project/${this.$route.params.id}/wishlist`, {
+        status: !isWished
+      })
+        .then(({ data }) => {
+          this.snackbar.open(data.message)
+          this.$store.dispatch('auth/updateWishlists', {
+            wishlists: data.wishlists
+          })
+          if (this.project.is_wished) {
+            this.project.is_wished.status = !this.project.is_wished.status
+          } else {
+            this.project.is_wished = {
+              status: true
+            }
+          }
+        }).catch((e) => {
+          this.snackbar.open(e.response.data.message)
+          this.$router.push({ name: 'login' })
+          // console.log(error.response)
+        })
+    },
+
+    activateOnScroll () {
+      this.projects = null
+      this.beenFetchSimilar = false
+      if (this.$matchMedia.xl) {
+        let app = document.getElementsByTagName('html')[0]
+        this.debounceFetchSimilar = ''
+        window.onscroll = () => {
+          clearTimeout(this.debounceFetchSimilar)
+          this.debounceFetchSimilar = setTimeout(() => {
+            let nearBottom = app.scrollTop + 1200 > app.scrollHeight
+            if (nearBottom && !this.beenFetchSimilar) this.similarProjects()
+          }, 300)
+        }
+      }
     },
 
     copyToClipboard () {
@@ -478,8 +486,6 @@ export default {
       return filter[filter.length - 1]
     }
   }
+
 }
 </script>
-
-<style>
-</style>

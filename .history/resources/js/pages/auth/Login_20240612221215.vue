@@ -40,7 +40,7 @@
         </div>
         <div>
           <input id="login-lecturer" v-model="form.role" class="login-radio" type="radio" value="Lecturer">
-          <label class="login-radio--label" for="login-lecturer" @click="chooseLecturer">client</label>
+          <label class="login-radio--label" for="login-lecturer" @click="chooseLecturer"></label>
         </div>
       </div>
 
@@ -99,7 +99,7 @@
         </p>
       </div>
       <div v-if="$matchMedia.xl" class="desktop-login__footer">
-        workfusion, All Rights Reserved. copyrigh 2024 . | Created felicients onelicien
+        workfusion, All Rights Reserved. copy; 2024 . | Created by FILKOM
       </div>
     </div>
   </div>
