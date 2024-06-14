@@ -3,8 +3,7 @@
 
 ## Description
 
-Workfusion 2.0 is a modern web application built with Vue.js and Laravel, designed to enhance productivity and collaboration among teams.
-
+Workfusion 2.0 is a modern web application freelance application.
 ## Table of Contents
 
 - [Installation](#installation)
