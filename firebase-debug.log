@@ -1,0 +1,16 @@
+[debug] [2024-06-13T18:20:28.404Z] ----------------------------------------------------------------------
+[debug] [2024-06-13T18:20:28.406Z] Command:       /usr/local/bin/firebase /Users/MacBookPro/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase login
+[debug] [2024-06-13T18:20:28.406Z] CLI Version:   13.11.2
+[debug] [2024-06-13T18:20:28.406Z] Platform:      darwin
+[debug] [2024-06-13T18:20:28.407Z] Node Version:  v18.5.0
+[debug] [2024-06-13T18:20:28.408Z] Time:          Thu Jun 13 2024 18:20:28 GMT+0000 (GMT)
+[debug] [2024-06-13T18:20:28.408Z] ----------------------------------------------------------------------
+[debug] 
+[info] i  Firebase optionally collects CLI and Emulator Suite usage and error reporting information to help improve our products. Data is collected in accordance with Google's privacy policy (https://policies.google.com/privacy) and is not used to identify you.
+ 
+[info] i  To change your data collection preference at any time, run `firebase logout` and log in again. 
+[info] 
+[info] Visit this URL on this device to log in:
+[info] https://accounts.google.com/o/oauth2/auth?client_id=563584335869-fgrhgmd47bqnekij5i8b5pr03ho849e6.apps.googleusercontent.com&scope=email%20openid%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloudplatformprojects.readonly%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Ffirebase%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform&response_type=code&state=830130402&redirect_uri=http%3A%2F%2Flocalhost%3A9005
+[info] 
+[info] Waiting for authentication...

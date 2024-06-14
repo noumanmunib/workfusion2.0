@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
-        'name' => 'ivqonsanada/phive',
+        'name' => 'felicien/workfusion',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'c89df84a18f80fc017778769e7546c07fc3cf7c9',
+        'reference' => '25e6990157c71238ab58e4fc5a8ad8b26e93a5d9',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -172,6 +172,15 @@
                 0 => '*',
             ),
         ),
+        'felicien/workfusion' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '25e6990157c71238ab58e4fc5a8ad8b26e93a5d9',
+            'type' => 'project',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'fideloper/proxy' => array(
             'pretty_version' => '4.4.1',
             'version' => '4.4.1.0',
@@ -198,15 +207,6 @@
             'install_path' => __DIR__ . '/../fruitcake/laravel-cors',
             'aliases' => array(),
             'dev_requirement' => false,
-        ),
-        'fzaninotto/faker' => array(
-            'pretty_version' => 'v1.9.2',
-            'version' => '1.9.2.0',
-            'reference' => '848d8125239d7dbf8ab25cb7f054f1a630e68c2e',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../fzaninotto/faker',
-            'aliases' => array(),
-            'dev_requirement' => true,
         ),
         'guzzlehttp/guzzle' => array(
             'pretty_version' => '6.5.5',
@@ -417,15 +417,6 @@
             'replaced' => array(
                 0 => 'v7.30.5',
             ),
-        ),
-        'ivqonsanada/phive' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => 'c89df84a18f80fc017778769e7546c07fc3cf7c9',
-            'type' => 'project',
-            'install_path' => __DIR__ . '/../../',
-            'aliases' => array(),
-            'dev_requirement' => false,
         ),
         'kodova/hamcrest-php' => array(
             'dev_requirement' => true,

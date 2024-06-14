@@ -1,6 +1,6 @@
 <template>
-  <form @submit.prevent="submitBid" @keydown="form.onKeydown($event)">
-    <div>
+  <form @submit.prevent="submitTeam" @keydown="form.onKeydown($event)">
+    <div class="">
       <!-- Team Members -->
       <div v-for="(member, index) in form.team" :key="`TeamMember-${index}`">
         <!-- Expertise Role -->
@@ -52,7 +52,7 @@
         </div>
       </div>
 
-      <!-- Bid Section -->
+      <!-- Bidding Section -->
       <div>
         <!-- Bid Amount -->
         <div class="form-group__container">
@@ -96,13 +96,13 @@
       </div>
 
       <!-- Submit Button -->
-      <div>
+      <div class="">
         <button type="submit" :disabled="form.busy" class="btn btn--blue btn--large apply__btn-submit">
           <span v-if="form.busy">
             Submitting...
           </span>
           <span v-else>
-            Submit Bid
+            Submit
           </span>
           <span class="iconify" data-icon="si-glyph:paper-plane" />
         </button>
@@ -154,6 +154,10 @@ export default {
   },
 
   methods: {
+    addMember () {
+      this.form.team.push({ expertise: '', tagname: '' })
+    },
+
     async getParty () {
       await this.$store.dispatch('auth/fetchUserParty')
 
@@ -164,7 +168,7 @@ export default {
       this.form.team.push(...member)
     },
 
-    async submitBid () {
+    async submitTeam () {
       const payload = {
         applicant: this.form.applicant,
         team: this.form.team,
@@ -188,6 +192,3 @@ export default {
 }
 </script>
 
-<style scoped>
-/* Add your scoped styles here */
-</style>

@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="submitBid" @keydown="form.onKeydown($event)">
-    <div>
+    <div class="">
       <!-- Team Members -->
       <div v-for="(member, index) in form.team" :key="`TeamMember-${index}`">
         <!-- Expertise Role -->
@@ -96,7 +96,7 @@
       </div>
 
       <!-- Submit Button -->
-      <div>
+      <div class="">
         <button type="submit" :disabled="form.busy" class="btn btn--blue btn--large apply__btn-submit">
           <span v-if="form.busy">
             Submitting...
@@ -154,6 +154,10 @@ export default {
   },
 
   methods: {
+    addMember () {
+      this.form.team.push({ expertise: '', tagname: '' })
+    },
+
     async getParty () {
       await this.$store.dispatch('auth/fetchUserParty')
 
@@ -186,7 +190,7 @@ export default {
     }
   }
 }
-</script>
+</script>a
 
 <style scoped>
 /* Add your scoped styles here */

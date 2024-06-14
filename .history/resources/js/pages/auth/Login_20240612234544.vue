@@ -139,8 +139,8 @@ export default {
       if (this.form.role === 'Student') {
         return {
           img: {
-            top: '/images/login-top-student.png',
-            midLeft: '/images/login-mid-left-1-student.png',
+            inset-block-start: '/images/login-top-student.png',
+            midinset-inline-start: '/images/login-mid-left-1-student.png',
             midRight: '/images/login-mid-right-student.png'
           },
           class: {

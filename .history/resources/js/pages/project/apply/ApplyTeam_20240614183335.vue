@@ -23,7 +23,7 @@
           <h4 class="form-group__input-name form__input-name">
             {{ index === 0 ? 'Leader' : `Member ${index}` }} Tag Name
           </h4>
-          <div class=" form-tag__group">
+          <div class="form-tag__group">
             <input v-model="form.team[index].tagname" class="form-tag__input" disabled>
             <label class="form-tag"><span class="iconify" data-icon="entypo:email" /></label>
           </div>
@@ -37,7 +37,7 @@
         <h4 class="form-group__input-name form__input-name">
           Tell me about your team!
         </h4>
-        <div class=" form__input-name">
+        <div class="form__input-name">
           <textarea v-model="form.self_describe" class="form-group__input-textarea" placeholder="Max. 300 words" rows="5" />
         </div>
       </div>
@@ -47,7 +47,7 @@
         <h4 class="form-group__input-name form__input-name">
           Why is your team interested in joining this project?
         </h4>
-        <div class="">
+        <div class="form__input-name">
           <textarea v-model="form.apply_reason" class="form-group__input-textarea" placeholder="Max. 300 words" rows="5" />
         </div>
       </div>
@@ -154,6 +154,10 @@ export default {
   },
 
   methods: {
+    addMember () {
+      this.form.team.push({ expertise: '', tagname: '' })
+    },
+
     async getParty () {
       await this.$store.dispatch('auth/fetchUserParty')
 
