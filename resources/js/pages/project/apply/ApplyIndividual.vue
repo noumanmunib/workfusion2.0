@@ -76,7 +76,7 @@
         <div class="form__input-name">
           <input v-model="form.apply.delivery_date" type="date" class="form-group__input">
         </div>
-      </div>
+      </div>a
 
       <!-- Proposal Description -->
       <div class="form-group__container">
@@ -94,7 +94,12 @@
           Milestone Payment Suggestion
         </h4>
         <div class="form__input-name">
-          <textarea v-model="form.apply.milestone_payment" class="form-group__input-textarea" placeholder="Describe milestone payment suggestion"></textarea>
+          <div v-for="(milestone, index) in form.apply.milestones" :key="index" class="form-group__container mb-3">
+            <input v-model="milestone.name" type="text" class="form-group__input" placeholder="Milestone">
+            <input v-model="milestone.price" type="number" class="form-group__input" placeholder="Price">
+            <button type="button" @click="removeMilestone(index)" class="btn btn--small btn--red">Remove</button>
+          </div>
+          <button type="button" @click="addMilestone" class="btn btn--small btn--blue">Add Milestone</button>
         </div>
       </div>
 
@@ -125,20 +130,22 @@ export default {
 
   metaInfo () { return { title: 'Apply - Individual' } },
 
-  data: () => ({
-    form: new Form({
-      apply: {
-        expertise: '',
-        tagname: '',
-        self_describe: '',
-        apply_reason: '',
-        bid_amount: null,
-        delivery_date: null,
-        proposal_description: '',
-        milestone_payment: ''
-      }
-    })
-  }),
+  data() {
+    return {
+      form: new Form({
+        apply: {
+          expertise: '',
+          tagname: '',
+          self_describe: '',
+          apply_reason: '',
+          bid_amount: null,
+          delivery_date: null,
+          proposal_description: '',
+          milestones: []
+        }
+      })
+    };
+  },
 
   computed: {
     ...mapGetters({
@@ -149,10 +156,10 @@ export default {
 
   mounted () {
     if (!this.$route.params.title) {
-      this.$router.push({ path: `/project/${this.$route.params.id}` })
+      this.$router.push({ path: `/project/${this.$route.params.id}` });
     }
 
-    this.getUser()
+    this.getUser();
   },
 
   methods: {
@@ -165,8 +172,16 @@ export default {
         bid_amount: null,
         delivery_date: null,
         proposal_description: '',
-        milestone_payment: ''
-      }
+        milestones: []
+      };
+    },
+
+    addMilestone() {
+      this.form.apply.milestones.push({ name: '', price: null });
+    },
+
+    removeMilestone(index) {
+      this.form.apply.milestones.splice(index, 1);
     },
 
     async submitIndividual () {
@@ -179,7 +194,7 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <style scoped>

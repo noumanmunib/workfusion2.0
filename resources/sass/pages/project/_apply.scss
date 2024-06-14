@@ -1,5 +1,4 @@
 .apply__container {
-  // @include respon(xl) {
   max-width: 72rem;
   margin: 0 auto;
   width: 100%;
@@ -7,7 +6,6 @@
   @include respon(xl) {
     padding: 2rem 0 6rem;
   }
-  // }
 }
 
 .apply__top--container {
@@ -54,7 +52,6 @@
 .form-group__radio-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
-
   gap: 1rem;
 
   @include respon(xl) {
@@ -114,8 +111,8 @@ button.active-type {
   grid-template-columns: 1fr;
 
   @include respon(xl) {
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
   }
 }
 

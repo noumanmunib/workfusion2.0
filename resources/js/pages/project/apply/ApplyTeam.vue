@@ -23,7 +23,7 @@
           <h4 class="form-group__input-name form__input-name">
             {{ index === 0 ? 'Leader' : `Member ${index}` }} Tag Name
           </h4>
-          <div class=" form-tag__group">
+          <div class="form-tag__group">
             <input v-model="form.team[index].tagname" class="form-tag__input" disabled>
             <label class="form-tag"><span class="iconify" data-icon="entypo:email" /></label>
           </div>
@@ -90,7 +90,12 @@
             Milestone Payment Suggestion
           </h4>
           <div class="form__input-name">
-            <textarea v-model="form.milestone_payment" class="form-group__input-textarea" placeholder="Describe milestone payment suggestion"></textarea>
+            <div v-for="(milestone, index) in form.milestone_payments" :key="`milestone-${index}`">
+              <input v-model="milestone.name" type="text" class="form-group__input" placeholder="Milestone Name">
+              <input v-model="milestone.price" type="number" class="form-group__input" placeholder="Price">
+              <button type="button" @click="removeMilestone(index)">Remove Milestone</button>
+            </div>
+            <button type="button" @click="addMilestone">Add Milestone</button>
           </div>
         </div>
       </div>
@@ -131,7 +136,7 @@ export default {
       bid_amount: null,
       delivery_date: null,
       proposal_description: '',
-      milestone_payment: ''
+      milestone_payments: [] // Array to hold milestone payment suggestions
     })
   }),
 
@@ -164,6 +169,14 @@ export default {
       this.form.team.push(...member)
     },
 
+    addMilestone () {
+      this.form.milestone_payments.push({ name: '', price: null })
+    },
+
+    removeMilestone (index) {
+      this.form.milestone_payments.splice(index, 1)
+    },
+
     async submitBid () {
       const payload = {
         applicant: this.form.applicant,
@@ -173,7 +186,7 @@ export default {
         bid_amount: this.form.bid_amount,
         delivery_date: this.form.delivery_date,
         proposal_description: this.form.proposal_description,
-        milestone_payment: this.form.milestone_payment
+        milestone_payments: this.form.milestone_payments // Include milestone payments in payload
       };
 
       try {
