@@ -37,7 +37,7 @@
         <h4 class="form-group__input-name form__input-name">
           Tell me about your team!
         </h4>
-        <div class=" form__input-name">
+        <div class="form__input-name">
           <textarea v-model="form.self_describe" class="form-group__input-textarea" placeholder="Max. 300 words" rows="5" />
         </div>
       </div>
@@ -82,6 +82,9 @@
           <div class="form__input-name">
             <textarea v-model="form.proposal_description" class="form-group__input-textarea" placeholder="Max. 300 words" rows="5"></textarea>
           </div>
+          <div class="form-group__container mt-2">
+            <button type="button" @click="handleGenerateProposal" class="btn btn--small btn--green">Generate with AI</button>
+          </div>
         </div>
 
         <!-- Milestone Payment Suggestion -->
@@ -112,6 +115,16 @@
           <span class="iconify" data-icon="si-glyph:paper-plane" />
         </button>
       </div>
+
+      <!-- Subscription Prompt Modal -->
+      <div v-if="showSubscriptionPrompt" class="modal">
+        <div class="modal-content">
+          <span class="close" @click="closeSubscriptionPrompt">&times;</span>
+          <h2>Upgrade to Premium</h2>
+          <p>Subscribe to our premium plan to use AI-generated proposals and other exclusive features.</p>
+          <button @click="subscribeToPremium" class="btn btn--small btn--blue">Subscribe Now</button>
+        </div>
+      </div>
     </div>
   </form>
 </template>
@@ -119,6 +132,7 @@
 <script>
 import Form from 'vform'
 import { mapGetters } from 'vuex'
+import axios from 'axios';
 
 export default {
   name: 'ApplyTeamPage',
@@ -137,7 +151,8 @@ export default {
       delivery_date: null,
       proposal_description: '',
       milestone_payments: [] // Array to hold milestone payment suggestions
-    })
+    }),
+    showSubscriptionPrompt: false
   }),
 
   computed: {
@@ -177,6 +192,35 @@ export default {
       this.form.milestone_payments.splice(index, 1)
     },
 
+    handleGenerateProposal() {
+      if (this.user.is_premium) {
+        this.generateProposal();
+      } else {
+        this.showSubscriptionPrompt = true;
+      }
+    },
+
+    async generateProposal() {
+      try {
+        const response = await axios.post('/api/generate-proposal', {
+          description: this.$route.params.description // assuming the project description is available in route params
+        });
+        this.form.proposal_description = response.data.proposal;
+      } catch (e) {
+        this.snackbar.open(e.response.data.message);
+      }
+    },
+
+    closeSubscriptionPrompt() {
+      this.showSubscriptionPrompt = false;
+    },
+
+    subscribeToPremium() {
+      // Implement subscription logic here
+      alert('Redirecting to subscription page...');
+      this.closeSubscriptionPrompt();
+    },
+
     async submitBid () {
       const payload = {
         applicant: this.form.applicant,
@@ -203,4 +247,42 @@ export default {
 
 <style scoped>
 /* Add your scoped styles here */
+
+/* Modal styles */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
 </style>
