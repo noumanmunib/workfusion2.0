@@ -37,7 +37,7 @@
         </div>
         <div>
           <input id="login-lecturer" v-model="form.role" class="login-radio" type="radio" value="Lecturer" name="role">
-          <label class="login-radio--label" for="login-lecturer" @click="chooseLecturer">client</label>
+          <label class="login-radio--label" for="login-lecturer" @click="chooseLecturer">Client</label>
         </div>
       </div>
 
@@ -119,6 +119,18 @@
         </div>
       </form>
 
+      <!-- Social Login Buttons -->
+      <div class="social-login-buttons">
+        <button @click="loginWithGoogle" class="social-login-button google-login">
+          <img src="/images/google-logo.svg" alt="Google Logo">
+          Sign Up with Google
+        </button>
+        <button @click="loginWithLinkedIn" class="social-login-button linkedin-login">
+          <img src="/images/linkedin-logo.svg" alt="LinkedIn Logo">
+          Sign Up with LinkedIn
+        </button>
+      </div>
+
       <div class="register-extra">
         <p>
           Already had an account?
@@ -197,25 +209,18 @@ export default {
 
   methods: {
     async register () {
-      // Register the user.
       const { data } = await this.form.post('/api/register')
 
-      // Must verify email first.
       if (data.status) {
         this.mustVerifyEmail = true
         this.snackbar.open(data.status)
         this.$router.push({ name: 'verification.check', params: { email: this.form.email } })
       } else {
-        // Log in the user.
         const { data: { token } } = await this.form.post('/api/login')
 
-        // Save the token.
         this.$store.dispatch('auth/saveToken', { token })
-
-        // Update the user.
         await this.$store.dispatch('auth/updateUser', { user: data })
 
-        // Redirect home.
         this.$router.push({ name: 'index' })
       }
     },
@@ -232,7 +237,53 @@ export default {
     togglePassword () {
       this.hidePassword = !this.hidePassword
       this.passwordType = this.hidePassword ? 'password' : 'text'
+    },
+    loginWithGoogle () {
+      window.location.href = '/auth/google'
+    },
+    loginWithLinkedIn () {
+      window.location.href = '/auth/linkedin'
     }
   }
 }
 </script>
+
+<style scoped>
+.register-page--container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-login-buttons {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.social-login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.google-login {
+  background-color: #4285F4;
+  color: white;
+}
+
+.linkedin-login {
+  background-color: #0077B5;
+  color: white;
+}
+
+.social-login-button img {
+  margin-right: 0.5rem;
+}
+</style>
