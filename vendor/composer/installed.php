@@ -3,7 +3,7 @@
         'name' => 'felicien/workfusion',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '25e6990157c71238ab58e4fc5a8ad8b26e93a5d9',
+        'reference' => '456bd4da5a5613b2bf125893d93aed665a1e7086',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -175,7 +175,7 @@
         'felicien/workfusion' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '25e6990157c71238ab58e4fc5a8ad8b26e93a5d9',
+            'reference' => '456bd4da5a5613b2bf125893d93aed665a1e7086',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
