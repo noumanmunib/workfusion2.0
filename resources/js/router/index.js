@@ -1,26 +1,27 @@
-import Vue from 'vue'
-import store from '~/store'
-import Meta from 'vue-meta'
-import routes from './routes'
-import Router from 'vue-router'
-import { sync } from 'vuex-router-sync'
+import Vue from 'vue';
+import store from '~/store';
+import Meta from 'vue-meta';
+import routes from './routes'; // Ensure you have defined `routes` correctly
+import Router from 'vue-router';
+import { sync } from 'vuex-router-sync';
+import SubscriptionPage from '../../js/pages/project/subscription/SubscriptionPage.vue';
 
-Vue.use(Meta)
-Vue.use(Router)
+Vue.use(Meta);
+Vue.use(Router);
 
 // The middleware for every page of the application.
-const globalMiddleware = ['check-auth']
+const globalMiddleware = ['check-auth'];
 
 // Load middleware modules dynamically.
 const routeMiddleware = resolveMiddleware(
   require.context('~/middleware', false, /.*\.js$/)
-)
+);
 
-const router = createRouter()
+const router = createRouter();
 
-sync(store, router)
+sync(store, router);
 
-export default router
+export default router;
 
 /**
  * Create a new router instance.
@@ -31,13 +32,20 @@ function createRouter () {
   const router = new Router({
     scrollBehavior,
     mode: 'history',
-    routes
-  })
+    routes: [
+      ...routes, // Ensure routes from `routes.js` are included here
+      {
+        path: '/project/subscription',
+        name: 'SubscriptionPage',
+        component: SubscriptionPage
+      }
+    ]
+  });
 
-  router.beforeEach(beforeEach)
-  router.afterEach(afterEach)
+  router.beforeEach(beforeEach);
+  router.afterEach(afterEach);
 
-  return router
+  return router;
 }
 
 /**
@@ -48,22 +56,22 @@ function createRouter () {
  * @param {Function} next
  */
 async function beforeEach (to, from, next) {
-  let components = []
+  let components = [];
 
   try {
     // Get the matched components and resolve them.
     components = await resolveComponents(
       router.getMatchedComponents({ ...to })
-    )
+    );
   } catch (error) {
     if (/^Loading( CSS)? chunk (\d)+ failed\./.test(error.message)) {
-      window.location.reload(true)
-      return
+      window.location.reload(true);
+      return;
     }
   }
 
   if (components.length === 0) {
-    return next()
+    return next();
   }
 
   // Start the loading bar.
@@ -72,17 +80,17 @@ async function beforeEach (to, from, next) {
   // }
 
   // Get the middleware for all the matched components.
-  const middleware = getMiddleware(components)
+  const middleware = getMiddleware(components);
 
   // Call each middleware.
   callMiddleware(middleware, to, from, (...args) => {
     // Set the application layout only if "next()" was called with no args.
     if (args.length === 0) {
-      router.app.setLayout(components[0].layout || '')
+      router.app.setLayout(components[0].layout || '');
     }
 
-    next(...args)
-  })
+    next(...args);
+  });
 }
 
 /**
@@ -93,7 +101,7 @@ async function beforeEach (to, from, next) {
  * @param {Function} next
  */
 async function afterEach (to, from, next) {
-  await router.app.$nextTick()
+  await router.app.$nextTick();
 
   // router.app.$loading.finish()
 }
@@ -107,7 +115,7 @@ async function afterEach (to, from, next) {
  * @param {Function} next
  */
 function callMiddleware (middleware, to, from, next) {
-  const stack = middleware.reverse()
+  const stack = middleware.reverse();
 
   const _next = (...args) => {
     // Stop if "_next" was called with an argument or the stack is empty.
@@ -116,21 +124,21 @@ function callMiddleware (middleware, to, from, next) {
       //   router.app.$loading.finish()
       // }
 
-      return next(...args)
+      return next(...args);
     }
 
-    const middleware = stack.pop()
+    const middleware = stack.pop();
 
     if (typeof middleware === 'function') {
-      middleware(to, from, _next)
+      middleware(to, from, _next);
     } else if (routeMiddleware[middleware]) {
-      routeMiddleware[middleware](to, from, _next)
+      routeMiddleware[middleware](to, from, _next);
     } else {
-      throw Error(`Undefined middleware [${middleware}]`)
+      throw Error(`Undefined middleware [${middleware}]`);
     }
-  }
+  };
 
-  _next()
+  _next();
 }
 
 /**
@@ -141,8 +149,8 @@ function callMiddleware (middleware, to, from, next) {
  */
 function resolveComponents (components) {
   return Promise.all(components.map(component => {
-    return typeof component === 'function' ? component() : component
-  }))
+    return typeof component === 'function' ? component() : component;
+  }));
 }
 
 /**
@@ -152,17 +160,17 @@ function resolveComponents (components) {
  * @return {Array}
  */
 function getMiddleware (components) {
-  const middleware = [...globalMiddleware]
+  const middleware = [...globalMiddleware];
 
   components.filter(c => c.middleware).forEach(component => {
     if (Array.isArray(component.middleware)) {
-      middleware.push(...component.middleware)
+      middleware.push(...component.middleware);
     } else {
-      middleware.push(component.middleware)
+      middleware.push(component.middleware);
     }
-  })
+  });
 
-  return middleware
+  return middleware;
 }
 
 /**
@@ -177,25 +185,25 @@ function getMiddleware (components) {
  */
 function scrollBehavior (to, from, savedPosition) {
   if (savedPosition) {
-    return savedPosition
+    return savedPosition;
   }
 
   if (to.hash) {
-    return { selector: to.hash }
+    return { selector: to.hash };
   }
 
-  const [component] = router.getMatchedComponents({ ...to }).slice(-1)
+  const [component] = router.getMatchedComponents({ ...to }).slice(-1);
 
   if (component && component.scrollToTop === false) {
-    return {}
+    return {};
   }
 
   // return {}
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve({ x: 0, y: 0 })
-    }, 300)
-  })
+      resolve({ x: 0, y: 0 });
+    }, 300);
+  });
 }
 
 /**
@@ -209,5 +217,5 @@ function resolveMiddleware (requireContext) {
     )
     .reduce((guards, [name, guard]) => (
       { ...guards, [name]: guard.default }
-    ), {})
+    ), {});
 }

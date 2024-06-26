@@ -128,13 +128,10 @@ import axios from 'axios';
 
 export default {
   name: 'ApplyIndividualPage',
-
   middleware: ['auth', 'student'],
-
   metaInfo() {
     return { title: 'Apply - Individual' };
   },
-
   data() {
     return {
       form: new Form({
@@ -151,28 +148,23 @@ export default {
       showSubscriptionPrompt: false
     };
   },
-
   computed: {
     ...mapGetters({
       user: 'auth/user',
       snackbar: 'notification/snackbar'
     })
   },
-
   mounted() {
     this.form.expertise = this.user.expertise;
     this.form.tagname = this.user.tagname;
   },
-
   methods: {
     addMilestone() {
       this.form.milestone_payments.push({ name: '', price: null });
     },
-
     removeMilestone(index) {
       this.form.milestone_payments.splice(index, 1);
     },
-
     handleGenerateProposal() {
       if (this.user.is_premium) {
         this.generateProposal();
@@ -180,7 +172,6 @@ export default {
         this.showSubscriptionPrompt = true;
       }
     },
-
     async generateProposal() {
       try {
         const response = await axios.post('/api/generate-proposal', {
@@ -192,16 +183,13 @@ export default {
         alert('Failed to generate proposal. Please try again.');
       }
     },
-
     closeSubscriptionPrompt() {
       this.showSubscriptionPrompt = false;
     },
-
     subscribeToPremium() {
-      alert('Redirecting to subscription page...'); // Replace with actual subscription logic
+      this.$router.push('/project/subscription');
       this.closeSubscriptionPrompt();
     },
-
     async submitIndividual() {
       const payload = {
         applicant: this.form.applicant,
@@ -262,8 +250,7 @@ export default {
   font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
+.close:hover, .close:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;
