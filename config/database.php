@@ -44,11 +44,11 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => '172.31.94.143', // Replace with your actual AWS EC2 instance IP address
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'database' => 'workfusion', // Use the database name 'workfusion' you created
+            'username' => 'workfusion_user', // Use the username 'workfusion_user' you created
+            'password' => 'workfusion', // Use the password you set for 'workfusion_user'
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
