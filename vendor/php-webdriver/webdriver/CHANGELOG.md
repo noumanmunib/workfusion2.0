@@ -1,6 +1,62 @@
 # Changelog
 This project versioning adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+
+## 1.15.1 - 2023-10-20
+- Update `symfony/process` dependency to support upcoming Symfony 7.
+
+## 1.15.0 - 2023-08-29
+### Changed
+- Capability key `ChromeOptions::CAPABILITY_W3C` used to set ChromeOptions is now deprecated in favor of `ChromeOptions::CAPABILITY`, which now also contains the W3C compatible value (`goog:chromeOptions`).
+- ChromeOptions are now passed to the driver always as a W3C compatible key `goog:chromeOptions`, even in the deprecated OSS JsonWire payload (as ChromeDriver [supports](https://bugs.chromium.org/p/chromedriver/issues/detail?id=1786) this since 2017).
+- Improve Safari compatibility for `<select multilpe>` element.
+- Remove no longer needed compatibility layer with old Symfony.
+- Docs: Document exception throwing in findElement.
+
+### Fixed
+- Handle unexpected response when getting element(s) by throwing an exception, not triggering fatal error.
+
+## 1.14.0 - 2023-02-09
+### Added
+- `PhpWebDriverExceptionInterface` as a common interface to identify all exceptions thrown in php-webdriver.
+
+### Changed
+- Require PHP ^7.3.
+- Capabilities must be either explicitly provided or retrievable from Selenium Grid when resuing session with `createBySessionID()`.
+- Throw `UnexpectedResponseException` instead of `UnknownErrorException` in `findElement()` and `findElements()` methods.
+- Throw custom php-webdriver exceptions instead of native PHP SPL exceptions.
+- Do not mix internal non-W3C WebDriver exceptions, separate them into own namespaces.
+
+## 1.13.1 - 2022-10-11
+### Fixed
+- Do not fail when using `isDisplayed()` and capabilities are missing in WebDriver instance. (Happens when driver instance was created using `RemoteWebDriver::createBySessionID()`.)
+
+## 1.13.0 - 2022-10-03
+### Added
+- Support for current Firefox XPI extension format. Extensions could now be loaded into `FirefoxProfile` using `addExtension()` method.
+- `setProfile()` method to `FirefoxOptions`, which is now a preferred way to set Firefox Profile.
+- Element `isDisplayed()` can now be used even for browsers not supporting native API endpoint (like Safari), thanks to javascript atom workaround.
+
+### Changed
+- Handle errors when taking screenshots. `WebDriverException` is thrown if WebDriver returns empty or invalid screenshot data.
+- Deprecate `FirefoxDriver::PROFILE` constant. Instead, use `setProfile()` method of `FirefoxOptions` to set Firefox Profile.
+- Deprecate `getAllSessions()` method of `RemoteWebDriver` (which is not part of W3C WebDriver).
+- Increase default request timeout to 3 minutes (instead of 30 seconds).
+
+### Fixed
+- Throw `UnknownErrorException` instead of fatal error if remote end returns invalid response for `findElement()`/`findElements()` commands.
+
+## 1.12.1 - 2022-05-03
+### Fixed
+- Improper PHP documentation for `getAttribute()` and `getDomProperty()`.
+- Unsafe use of `static::` when accessing private property in `DesiredCapabilities`.
+- PHP 8.1 deprecations in the `Cookie` class.
+
+### Changed
+- Docs: Extend `findElement()`/`findElements()` method documentation to better explain XPath behavior.
+- Add `@return` and `@param` type annotations to Cookie class to avoid deprecations in PHP 8.1.
+
 ## 1.12.0 - 2021-10-14
 ### Added
 - `RemoteWebElement::getDomProperty()` method to read JavaScript properties of an element (like the value of `innerHTML` etc.) in W3C mode.

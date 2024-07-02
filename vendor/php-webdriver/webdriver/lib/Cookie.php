@@ -2,14 +2,14 @@
 
 namespace Facebook\WebDriver;
 
-use InvalidArgumentException;
+use Facebook\WebDriver\Exception\Internal\LogicException;
 
 /**
  * Set values of an cookie.
  *
  * Implements ArrayAccess for backwards compatibility.
  *
- * @see https://w3c.github.io/webdriver/webdriver-spec.html#cookies
+ * @see https://w3c.github.io/webdriver/#cookies
  */
 class Cookie implements \ArrayAccess
 {
@@ -36,10 +36,10 @@ class Cookie implements \ArrayAccess
     public static function createFromArray(array $cookieArray)
     {
         if (!isset($cookieArray['name'])) {
-            throw new InvalidArgumentException('Cookie name should be set');
+            throw LogicException::forError('Cookie name should be set');
         }
         if (!isset($cookieArray['value'])) {
-            throw new InvalidArgumentException('Cookie value should be set');
+            throw LogicException::forError('Cookie value should be set');
         }
         $cookie = new self($cookieArray['name'], $cookieArray['value']);
 
@@ -107,7 +107,7 @@ class Cookie implements \ArrayAccess
     public function setDomain($domain)
     {
         if (mb_strpos($domain, ':') !== false) {
-            throw new InvalidArgumentException(sprintf('Cookie domain "%s" should not contain a port', $domain));
+            throw LogicException::forError(sprintf('Cookie domain "%s" should not contain a port', $domain));
         }
 
         $this->offsetSet('domain', $domain);
@@ -207,16 +207,32 @@ class Cookie implements \ArrayAccess
         return $cookie;
     }
 
+    /**
+     * @param mixed $offset
+     * @return bool
+     */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->cookie[$offset]);
     }
 
+    /**
+     * @param mixed $offset
+     * @return mixed
+     */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->offsetExists($offset) ? $this->cookie[$offset] : null;
     }
 
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     * @return void
+     */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         if ($value === null) {
@@ -226,6 +242,11 @@ class Cookie implements \ArrayAccess
         }
     }
 
+    /**
+     * @param mixed $offset
+     * @return void
+     */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->cookie[$offset]);
@@ -237,11 +258,11 @@ class Cookie implements \ArrayAccess
     protected function validateCookieName($name)
     {
         if ($name === null || $name === '') {
-            throw new InvalidArgumentException('Cookie name should be non-empty');
+            throw LogicException::forError('Cookie name should be non-empty');
         }
 
         if (mb_strpos($name, ';') !== false) {
-            throw new InvalidArgumentException('Cookie name should not contain a ";"');
+            throw LogicException::forError('Cookie name should not contain a ";"');
         }
     }
 
@@ -251,7 +272,7 @@ class Cookie implements \ArrayAccess
     protected function validateCookieValue($value)
     {
         if ($value === null) {
-            throw new InvalidArgumentException('Cookie value is required when setting a cookie');
+            throw LogicException::forError('Cookie value is required when setting a cookie');
         }
     }
 }
