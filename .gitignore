@@ -1,4 +1,10 @@
 .env
 .vercel
-/.history
+.node_modules
 MyKeyPair.pem
+/.history
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> upstream/main

@@ -122,8 +122,10 @@
       <!-- Social Login Buttons -->
       <div class="social-login-buttons">
         <button @click="loginWithGoogle" class="social-login-button google-login">
-          <img src="/images/google-logo.svg" alt="Google Logo">
+          <a :href="googleAuthRoute">
+            <img src="/images/google-icon.svg" alt="Google Logo">
           Sign Up with Google
+        </a>
         </button>
         <button @click="loginWithLinkedIn" class="social-login-button linkedin-login">
           <img src="/images/linkedin-logo.svg" alt="LinkedIn Logo">
@@ -270,11 +272,11 @@ export default {
   padding: 0.5rem 1rem;
   border: none;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 2rem;
 }
 
 .google-login {
-  background-color: #4285F4;
+  background-color: #0e0332;
   color: white;
 }
 

@@ -31,6 +31,8 @@ class CreateUsersTable extends Migration
             $table->string('location')->nullable();
             $table->text('biography')->nullable();
             $table->boolean('is_open_hired')->default(false);
+            //google authentication
+            $table->string('google_id')->nullable();
 
             $table->string('behance')->nullable();
             $table->string('github')->nullable();
