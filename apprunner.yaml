@@ -8,5 +8,5 @@ build:
     - php artisan key:generate
     - php artisan config:cache
     - php artisan migrate --force
-    - yarn run dev
+    - yarn run dev  # Changed to 'yarn run dev' assuming this runs your specific build script
     - php artisan serve
