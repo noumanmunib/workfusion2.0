@@ -4,6 +4,7 @@ build:
   commands:
     - yarn install 
     - composer install --no-dev
+    - php -r "file_exists('.env') || copy('.env.example', '.env');"  # Command to create .env if not exists
     - php artisan key:generate
     - php artisan config:cache
     - php artisan migrate --force
