@@ -1,0 +1,9 @@
+version: 1.0
+runtime: nodejs14
+build:
+  commands:
+    - composer install --no-dev
+    - php artisan key:generate
+    - php artisan config:cache
+    - php artisan migrate --force
+    # Add any other necessary build steps here
