@@ -45,6 +45,7 @@ cd workfusion2.0
 composer install
 cp .env.example .env
 php artisan key:generate
+php artisan migrate:fresh --seed
 ```
 
 Configure your `.env` file as needed for your database and other settings.
