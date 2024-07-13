@@ -2,13 +2,7 @@
 
 namespace Laravel\Socialite\Two;
 
-use Exception;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-use GuzzleHttp\RequestOptions;
 use Illuminate\Support\Arr;
-use phpseclib3\Crypt\RSA;
-use phpseclib3\Math\BigInteger;
 
 class FacebookProvider extends AbstractProvider implements ProviderInterface
 {
@@ -55,13 +49,6 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
     protected $reRequest = false;
 
     /**
-     * The access token that was last used to retrieve a user.
-     *
-     * @var string|null
-     */
-    protected $lastToken;
-
-    /**
      * {@inheritdoc}
      */
     protected function getAuthUrl($state)
@@ -83,7 +70,7 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
     public function getAccessTokenResponse($code)
     {
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
-            RequestOptions::FORM_PARAMS => $this->getTokenFields($code),
+            'form_params' => $this->getTokenFields($code),
         ]);
 
         $data = json_decode($response->getBody(), true);
@@ -96,80 +83,18 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      */
     protected function getUserByToken($token)
     {
-        $this->lastToken = $token;
-
-        return $this->getUserByOIDCToken($token) ??
-               $this->getUserFromAccessToken($token);
-    }
-
-    /**
-     * Get user based on the OIDC token.
-     *
-     * @param  string  $token
-     * @return array
-     */
-    protected function getUserByOIDCToken($token)
-    {
-        $kid = json_decode(base64_decode(explode('.', $token)[0]), true)['kid'] ?? null;
-
-        if ($kid === null) {
-            return null;
-        }
-
-        $data = (array) JWT::decode($token, $this->getPublicKeyOfOIDCToken($kid));
-
-        throw_if($data['aud'] !== $this->clientId, new Exception('Token has incorrect audience.'));
-        throw_if($data['iss'] !== 'https://www.facebook.com', new Exception('Token has incorrect issuer.'));
-
-        $data['id'] = $data['sub'];
-        $data['first_name'] = $data['given_name'];
-        $data['last_name'] = $data['family_name'];
-
-        return $data;
-    }
-
-    /**
-     * Get the public key to verify the signature of OIDC token.
-     *
-     * @param  string  $id
-     * @return \Firebase\JWT\Key
-     */
-    protected function getPublicKeyOfOIDCToken(string $kid)
-    {
-        $response = $this->getHttpClient()->get('https://limited.facebook.com/.well-known/oauth/openid/jwks/');
-
-        $key = Arr::first(json_decode($response->getBody()->getContents(), true)['keys'], function ($key) use ($kid) {
-            return $key['kid'] === $kid;
-        });
-
-        $key['n'] = new BigInteger(JWT::urlsafeB64Decode($key['n']), 256);
-        $key['e'] = new BigInteger(JWT::urlsafeB64Decode($key['e']), 256);
-
-        return new Key((string) RSA::load($key), 'RS256');
-    }
-
-    /**
-     * Get user based on the access token.
-     *
-     * @param  string  $token
-     * @return array
-     */
-    protected function getUserFromAccessToken($token)
-    {
-        $params = [
-            'access_token' => $token,
-            'fields' => implode(',', $this->fields),
-        ];
+        $meUrl = $this->graphUrl.'/'.$this->version.'/me?access_token='.$token.'&fields='.implode(',', $this->fields);
 
         if (! empty($this->clientSecret)) {
-            $params['appsecret_proof'] = hash_hmac('sha256', $token, $this->clientSecret);
+            $appSecretProof = hash_hmac('sha256', $token, $this->clientSecret);
+
+            $meUrl .= '&appsecret_proof='.$appSecretProof;
         }
 
-        $response = $this->getHttpClient()->get($this->graphUrl.'/'.$this->version.'/me', [
-            RequestOptions::HEADERS => [
+        $response = $this->getHttpClient()->get($meUrl, [
+            'headers' => [
                 'Accept' => 'application/json',
             ],
-            RequestOptions::QUERY => $params,
         ]);
 
         return json_decode($response->getBody(), true);
@@ -180,19 +105,15 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
      */
     protected function mapUserToObject(array $user)
     {
-        if (! isset($user['sub'])) {
-            $avatarUrl = $this->graphUrl.'/'.$this->version.'/'.$user['id'].'/picture';
-
-            $avatarOriginalUrl = $avatarUrl.'?width=1920';
-        }
+        $avatarUrl = $this->graphUrl.'/'.$this->version.'/'.$user['id'].'/picture';
 
         return (new User)->setRaw($user)->map([
             'id' => $user['id'],
             'nickname' => null,
             'name' => $user['name'] ?? null,
             'email' => $user['email'] ?? null,
-            'avatar' => $avatarUrl ?? $user['picture'] ?? null,
-            'avatar_original' => $avatarOriginalUrl ?? $user['picture'] ?? null,
+            'avatar' => $avatarUrl.'?type=normal',
+            'avatar_original' => $avatarUrl.'?width=1920',
             'profileUrl' => $user['link'] ?? null,
         ]);
     }
@@ -250,16 +171,6 @@ class FacebookProvider extends AbstractProvider implements ProviderInterface
         $this->reRequest = true;
 
         return $this;
-    }
-
-    /**
-     * Get the last access token used.
-     *
-     * @return string|null
-     */
-    public function lastToken()
-    {
-        return $this->lastToken;
     }
 
     /**
