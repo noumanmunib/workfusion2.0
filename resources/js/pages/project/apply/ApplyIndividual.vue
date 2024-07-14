@@ -65,6 +65,14 @@
           <span class="iconify" data-icon="si-glyph:paper-plane" />
         </v-button>
       </div>
+
+      <!-- Generate with AI button -->
+      <div class="apply__btn-ai">
+        <button class="btn btn--yellow btn--large" @click="generateWithAI">
+          <span>Generate with AI</span>
+          <span class="iconify" data-icon="fluent:robot-20-filled" />
+        </button>
+      </div>
     </div>
   </form>
 </template>
@@ -123,7 +131,21 @@ export default {
         .catch(e => {
           this.snackbar.open(e.response.data.message)
         })
+    },
+
+    generateWithAI () {
+      // Implement your logic for AI generation here
+      // Example: Show a message or initiate AI process
+      console.log('Generating with AI...');
     }
   }
 }
 </script>
+
+<style scoped>
+/* Add scoped styles for the yellow button */
+.btn--yellow {
+  background-color: yellow;
+  color: black; /* Ensure text is readable on yellow background */
+}
+</style>
