@@ -4,23 +4,20 @@
       <div class="flex-row desktop-nav__container">
         <div class="flex-row">
           <router-link :to="{ name: 'index' }">
-            <img class="desktop-nav__logo" src="https://i.ibb.co/5ngvTZq/Screenshot-2024-06-10-at-16-52-28.png" alt="">
+            <img class="desktop-nav__logo" :src="logoSrc" alt="">
           </router-link>
 
           <div class="desktop-nav__link--container">
-            <router-link v-for="(menu, index) in leftMenu" :key="`LeftMenu-${index}`" :to="menu.route" class="desktop-nav__link " active-class="desktop-nav__active-link">
+            <router-link v-for="(menu, index) in leftMenu" :key="`LeftMenu-${index}`" :to="menu.route" class="desktop-nav__link" active-class="desktop-nav__active-link">
               <span>{{ menu.text }}</span>
             </router-link>
           </div>
         </div>
         <div class="desktop-nav__right">
-          <!-- Authenticated -->
-
           <div v-if="user" class="flex-row desktop-nav__right-container">
             <div class="desktop-nav__right-icon">
               <router-link v-for="menu in rightMenu" :key="`RightMenu-${menu.icon}`" :to="menu.route" class="desktop-nav__link">
                 <Icon :refs="menu.route" :icon="menu.icon" :width="20" :height="20" />
-                <!-- <span class="iconify" :data-icon="menu.icon" width="20" height="20" /> -->
                 <span class="tooltip">{{ menu.text }}</span>
               </router-link>
 
@@ -46,10 +43,7 @@
               </div>
             </div>
           </div>
-        </div>
-
-        <div v-if="!user">
-          <div class="desktop-nav__right-container">
+          <div v-else class="desktop-nav__right-container">
             <router-link :to="{ name: 'register' }" class="btn btn--link" tag="button">
               Create an Account
             </router-link>
@@ -75,7 +69,7 @@
               {{ title }}
             </div>
             <div v-show="!title">
-              <img src="https://i.ibb.co/5ngvTZq/Screenshot-2024-06-10-at-16-52-28.png" alt="">
+              <img :src="logoSrc" alt="">
             </div>
           </a>
         </div>
@@ -184,13 +178,16 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import Icon from '~/components/Icon'
 
 export default {
+  components: { Icon },
   data: () => ({
     appName: 'workfusion',
     menu: { show: false, hide: false },
     photoUrl: 'https://www.gravatar.com/avatar/67104dea1ce9aef46682a4d8d145588c.jpg?s=200&d=mm',
-    dropdown: { state: false, timeout: '' }
+    dropdown: { state: false, timeout: '' },
+    logoSrc: 'https://i.ibb.co/5ngvTZq/Screenshot-2024-06-10-at-16-52-28.png'
   }),
 
   computed: {
@@ -296,3 +293,19 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.desktop-nav__logo {
+  max-width: 100px;
+  max-height: 40px;
+  @media (max-width: 768px) {
+    max-width: 80px;
+    max-height: 30px;
+  }
+}
+
+.nav-brand img { /* Target the logo image in mobile navigation */
+  max-width: 80px; /* Adjust these values as needed */
+  max-height: 30px;
+}
+</style>
