@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AIController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,13 +12,12 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
- */
+*/
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::post('logout', 'Auth\LoginController@logout');
-
+    
     Route::get('user', 'Auth\UserController@current');
-
     Route::post('user/avatar', 'Auth\UserController@uploadAvatar');
     Route::delete('user/avatar', 'Auth\UserController@deleteAvatar');
     Route::post('user/cv', 'Auth\UserController@uploadCV');
@@ -68,6 +68,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('user/{user:tagname}/message', 'MessageController@index');
     Route::post('user/{user:tagname}/message/send', 'MessageController@sendMessage');
 
+    // Add AI proposal generation route
+    Route::post('/generate-proposal', [AIController::class, 'generateProposal']);
 });
 
 Route::group(['middleware' => 'guest:api'], function () {

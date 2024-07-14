@@ -23,7 +23,7 @@
           <p class="slide-1__paragraph moveInTop duration--1_5">
             Elevate your career and enrich your Freelancer experience 
           </p>
-          <router-link :to="{ name: 'explore' }" class="slide-1__button moveInTop duration--2" tag="button">
+          <router-link :to="{ name: 'explore' }" class="slide-1__button moveInTop duration--2 btn btn--yellow btn--large" tag="button">
             <span>Get Started</span>
             <span class="iconify" data-icon="ion:arrow-forward-outline" />
           </router-link>
@@ -55,7 +55,7 @@
         </p>
         <div class="slide-2__facts">
           <div class="slide-2__fact-item">
-            <span class="iconify slide-2__fact--icon" data-icon="bx:bxs-brain" />
+            <span class="iconify slide-2__fact--icon" data-icon="bx:bxs-brain" style="color: yellow;"></span>
             <div class="slide-2__fact--number">
               {{ projectByStatusCount.hiring }}
             </div>
@@ -64,7 +64,7 @@
             </div>
           </div>
           <div class="slide-2__fact-item">
-            <span class="iconify slide-2__fact--icon" data-icon="entypo:paper-plane" />
+            <span class="iconify slide-2__fact--icon" data-icon="entypo:paper-plane" style="color: yellow;"></span>
             <div class="slide-2__fact--number">
               {{ projectByStatusCount.ongoing }}
             </div>
@@ -73,7 +73,7 @@
             </div>
           </div>
           <div class="slide-2__fact-item">
-            <span class="iconify slide-2__fact--icon" data-icon="ant-design:check-circle-outlined" />
+            <span class="iconify slide-2__fact--icon" data-icon="ant-design:check-circle-outlined" style="color: yellow;"></span>
             <div class="slide-2__fact--number">
               {{ projectByStatusCount.finished }}
             </div>
@@ -125,7 +125,7 @@ export default {
   },
 
   data: () => ({
-    projectByStatusCount: '',
+    projectByStatusCount: {},
     topLeaderboards: {},
     debouncedScroll: ''
   }),
@@ -141,7 +141,7 @@ export default {
     this.appendNavBg()
     this.getHomeData()
 
-    this.$nextTick(function () {
+    this.$nextTick(() => {
       document.querySelector('.desktop-nav', '.nav-base').style.boxShadow = 'unset'
       let app = document.querySelector('html')
       window.onscroll = () => {
@@ -155,14 +155,11 @@ export default {
         }, 50)
       }
     })
-    // this.addProximity()
   },
 
   beforeDestroy () {
     this.removeNavBg()
-
     window.onscroll = null
-
     document.querySelector('.desktop-nav', '.nav-base').style.boxShadow = '0 0.2rem 0.4rem 0 rgba(0, 0, 0, 0.1)'
   },
 
@@ -181,26 +178,14 @@ export default {
     },
 
     async getHomeData () {
-      await axios.get(`/api/home`)
-        .then(({ data }) => {
-          this.projectByStatusCount = data.project_count
-          this.topLeaderboards = data.top_boards
-        })
+      try {
+        const { data } = await axios.get(`/api/home`)
+        this.projectByStatusCount = data.project_count || {}
+        this.topLeaderboards = data.top_boards || {}
+      } catch (error) {
+        console.error('Error fetching home data:', error)
+      }
     }
-
-    // addProximity () {
-    //   const app = document.querySelector('html')
-    //   const footer = document.querySelector('footer')
-    //   app.classList.add('slide-container')
-    //   footer.classList.add('slide', 'pt-5')
-    // },
-
-    // removeProximity () {
-    //   const app = document.querySelector('html')
-    //   const footer = document.querySelector('footer')
-    //   app.classList.remove('slide-container')
-    //   footer.classList.remove('slide', 'pt-5')
-    // }
   }
 }
 </script>
@@ -214,6 +199,56 @@ export default {
   @include respon(xl) {
     margin-top: calc(-1 * var(--desktop-nav-height));
   }
+
+  .slide-1__button {
+    background-color: yellow;
+    color: black;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #ffd700; // Brighten the yellow on hover
+    }
+  }
+
+  .slide  .slide-1__paragraph {
+    color: #333; // Adjusting text color for better readability
+    margin-top: 1rem; // Adding spacing between elements
+  }
+
+  .slide-2__fact-item {
+    margin-bottom: 1rem; // Adding spacing between project status items
+  }
+
+  .slide-2__fact--icon {
+    font-size: 1.5rem; // Increasing icon size for better visibility
+    margin-right: 0.5rem; // Adding spacing between icon and number
+  }
+
+  .slide-3__heading {
+    color: #333; // Adjusting text color for better readability
+  }
+
+  .slide-3__paragraph {
+    color: #666; // Adjusting text color for better readability
+    margin-top: 1rem; // Adding spacing between elements
+  }
+
+  .slide-3__button {
+    background-color: yellow; // Setting yellow background for the button
+    color: black; // Setting black text color for better contrast
+    padding: 0.5rem 1rem; // Adding padding to the button
+    border: none; // Removing border
+    border-radius: 0.25rem; // Adding border radius
+    transition: background-color 0.3s ease; // Smooth transition for background color change
+    cursor: pointer; // Changing cursor to pointer on hover
+
+    &:hover {
+      background-color: #ffd700; // Brighten the yellow on hover
+    }
+  }
 }
-</style>
-a
+</style>a

@@ -7,6 +7,7 @@
     "lint": "eslint --fix --ext .js,.vue resources/js"
   },
   "dependencies": {
+    "@google-cloud/language": "^6.4.0",
     "@swayable/vue-snarkdown": "^1.1.1",
     "@webqam/vue-match-media": "^2.0.1",
     "axios": "^0.21.1",
