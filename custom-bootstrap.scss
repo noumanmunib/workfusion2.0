@@ -1,0 +1,10 @@
+// custom-bootstrap.scss
+
+// Import Bootstrap's SCSS variables
+@import "node_modules/bootstrap/scss/bootstrap.scss";
+
+// Override styles
+& {
+  font-weight: $legend-font-weight;
+  font-family: $display-font-family;
+}

@@ -1,12 +1,52 @@
-version: 1.0
-runtime: nodejs14
-build:
-  commands:
-    - yarn install 
-    - composer install --no-dev
-    - php -r "file_exists('.env') || copy('.env.example', '.env');"
-    - php artisan key:generate
-    - php artisan config:cache
-    - php artisan migrate --force
-    - yarn run dev  # Changed to 'yarn run dev' assuming this runs your specific build script
-    - php artisan serve
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: workfusion2.0
+  namespace: default
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "1"
+    spec:
+      containers:
+        - image: gcr.io/workfusion-424002/workfusion2.0:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_CONNECTION
+              value: "mysql"
+            - name: DB_HOST
+              value: "127.0.0.1"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_DATABASE
+              value: "workfusion"
+            - name: DB_USERNAME
+              value: "workfusion"
+            - name: DB_PASSWORD
+              value: "workfusion"
+            - name: APP_KEY
+              value: "base64:tfl8ADa3MO6WUoCXau+AcSmCYuu/bbEtsMDGZ9ORMCc="
+            - name: APP_ENV
+              value: "production"
+            - name: APP_DEBUG
+              value: "false"
+            - name: APP_URL
+              value: "https://your-domain.com"
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 2
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 2

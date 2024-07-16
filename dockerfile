@@ -1,24 +1,37 @@
-FROM php:7.4-fpm-alpine
+# Use the official PHP image.
+# https://hub.docker.com/_/php
+FROM php:8.3-apache
 
-# Install additional packages if needed
-RUN apk add --no-cache nginx supervisor git
+# Install PHP extensions and tools
+RUN docker-php-ext-install -j "$(nproc)" opcache
 
-# Set up Nginx configuration
-COPY docker/nginx.conf /etc/nginx/nginx.conf
+# Configure PHP for Cloud Run.
+RUN set -ex; \
+  { \
+    echo "; Cloud Run enforces memory & timeouts"; \
+    echo "memory_limit = -1"; \
+    echo "max_execution_time = 0"; \
+    echo "; File upload at Cloud Run network limit"; \
+    echo "upload_max_filesize = 32M"; \
+    echo "post_max_size = 32M"; \
+    echo "; Configure Opcache for Containers"; \
+    echo "opcache.enable = On"; \
+    echo "opcache.validate_timestamps = Off"; \
+    echo "; Configure Opcache Memory (Application-specific)"; \
+    echo "opcache.memory_consumption = 32"; \
+  } > "$PHP_INI_DIR/conf.d/cloud-run.ini"
 
 # Set working directory
-WORKDIR /app
+WORKDIR /var/www/html
 
-# Copy application files
-COPY . /app
+# Copy the entire Laravel project into the container
+COPY . .
 
-# Install Composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
-    && composer install --no-dev --optimize-autoloader
+# Use the PORT environment variable in Apache configuration files.
+RUN sed -i "s/80/\$PORT/g" /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf /etc/apache2/sites-enabled/000-default.conf
 
-# Expose port
-EXPOSE 80
+# Expose the port defined by the PORT environment variable.
+EXPOSE $PORT
 
-# Start Nginx and PHP-FPM
-CMD ["nginx", "-g", "daemon off;"]
+# Start Apache server.
+CMD ["apache2-foreground"]
